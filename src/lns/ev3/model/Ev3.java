@@ -7,6 +7,57 @@ public class Ev3 {
 	private int yp = 0;
 	private int speed;
 	private int direction = 0; //0==straight, -1==left, 1==right
+	private int targetXp;
+	private int targetYp;
+	
+	public Ev3() {
+		setSpeed(100);
+	}
+	public void ev3SetUp(int x, int y, int speed,int tx, int ty) {
+		xp = x;
+		yp = y;
+		targetXp = tx;
+		targetYp = ty;
+		speed = this.speed;
+		
+	}
+	public boolean straightOneBlock() {
+		if ( direction == 0 && targetYp == yp)
+			return false;
+		else if ((direction == -1 || direction == 1) && targetXp == xp)
+		Motor.B.rotate(430, true);
+		Motor.C.rotate(430);
+		if( direction == 0 ) {
+			yp++;
+		} else {
+			xp += direction;
+		}
+		return true;
+	}
+
+	public boolean turnRight() {
+		int degree = 90;
+		if (speed == 0 || direction==1)
+			return false;
+		Motor.B.rotate(degree * 2, true);
+		Motor.C.rotate(-degree * 2);
+		direction++;
+		return true;
+	}
+
+	public boolean turnLeft() {
+		int degree = 90;
+		if (speed == 0 || direction==-1)
+			return false;		
+		Motor.B.rotate(-degree * 2, true);
+		Motor.C.rotate(degree * 2);
+		direction--;
+		return true;
+	}
+
+	public int getOneBlockDist() {
+		return 360*speed/100;
+	}
 	
 	public int getXp() {
 		return xp;
@@ -29,6 +80,8 @@ public class Ev3 {
 	}
 
 	public void setSpeed(int speed) {
+		Motor.B.setSpeed(speed);
+		Motor.C.setSpeed(speed);
 		this.speed = speed;
 	}
 
@@ -39,40 +92,18 @@ public class Ev3 {
 	public void setDirection(int direction) {
 		this.direction = direction;
 	}
-
-	public void ev3(int xp, int yp) {
-		xp = this.xp;
-		yp = this.yp;
-
-		Motor.B.setSpeed(100);
-		Motor.C.setSpeed(100);
+	
+	public int getTargetXp() {
+		return targetXp;
 	}
-
-	public void straightOneBlock() { //Y좌표로 한블럭 직선 이동
-		Motor.B.rotate(getOneBlockDist(), true);
-		Motor.C.rotate(getOneBlockDist());
+	public void setTargetXp(int targetXp) {
+		this.targetXp = targetXp;
 	}
-
-	public void turnRight() { //오른쪽으로 회전
-		int degree = 90;
-		if (speed == 0 || direction==1)
-			return;
-		Motor.B.rotate(degree * 2, true);
-		Motor.C.rotate(-degree * 2);
-		direction++;
+	
+	public int getTargetYp() {
+		return targetYp;
 	}
-
-	public void turnLeft() { //왼쪽으로 회전
-		int degree = 90;
-		if (speed == 0 || direction==-1)
-			return;		
-		Motor.B.rotate(-degree * 2, true);
-		Motor.C.rotate(degree * 2);
-
-		direction--;
-	}
-
-	public int getOneBlockDist() {
-		return 360*speed/100;
+	public void setTargetYp(int targetYp) {
+		this.targetYp = targetYp;
 	}
 }
