@@ -12,10 +12,7 @@ public class ClientTest {
 		MessageSocketClient socket = new MessageSocketClient(ip);
 		socket.connect();
 		socket.emitMessage("emit1");
-		//sleep();
-		socket.emitMessage("emit2");
-		//sleep();
-		socket.emitMessage("emit3");
+ 
 		socket.onMessage(new ClientMessageListener(){
 			public void onMessage(MessageSocketClient socket, String message){
 				System.out.println("client received : " + message);
@@ -29,12 +26,12 @@ public class ClientTest {
 		});
 	}
 
-	private static void sleep() {
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	private static void sleep() {
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 }
