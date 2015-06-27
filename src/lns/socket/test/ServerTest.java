@@ -1,10 +1,7 @@
 package lns.socket.test;
 
-import java.util.StringTokenizer;
-
 import lns.ev3.model.Ev3;
 import lns.socket.client.MessageSocketClient;
-import lns.socket.server.ConnectedMessageClient;
 import lns.socket.server.MessageSocketServer;
 import lns.socket.server.ServerMessageListener;
 
@@ -49,7 +46,7 @@ public class ServerTest {
 				//좌표받기
 				getClientCoordinates(message);
 				//충돌여부확인
-				//명령어 보내
+				//명령어 보내기
 				if(collisionPredict())
 					client.emitMessage("turn");
 				else
@@ -62,11 +59,12 @@ public class ServerTest {
 	}
 	
 	public static boolean getClientCoordinates(String message){
-		StringTokenizer st = new StringTokenizer(message,",");
-		if(st.countTokens() >= 2) {
-			clientXp = Integer.parseInt(st.nextToken());
-			clientYp = Integer.parseInt(st.nextToken());
-			if ( st.countTokens() != 0 && st.nextToken() == "clear")
+		String[] strArray = message.split(",");
+		
+		if(strArray.length >= 2) {
+			clientXp = Integer.parseInt(strArray[0]);
+			clientYp = Integer.parseInt(strArray[1]);
+			if ( strArray.length == 3 && strArray[2] == "clear")
 				goMasterTargetSpot();
 			
 			return true;
@@ -96,10 +94,11 @@ public class ServerTest {
 	private static boolean collisionPredict() {
 		if ( getDistance() < Math.sqrt(5))
 			return true;
+		
 		return false;
 	}
 
 	private static double getDistance() {
-		return Math.sqrt(Math.pow(masterEv3.getTargetXp()-clientXp, 2) + Math.pow(masterEv3.getTargetYp()-clientYp, 2));
+		return Math.sqrt(Math.pow(masterEv3.getXp()-clientXp, 2) + Math.pow(masterEv3.getYp()-clientYp, 2));
 	}
 }

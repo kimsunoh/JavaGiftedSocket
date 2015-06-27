@@ -3,8 +3,8 @@ package lns.ev3.model;
 import lejos.hardware.motor.Motor;
 
 public class Ev3 {
-	private int xp = 0;
-	private int yp = 0;
+	private int xp;
+	private int yp;
 	private int speed;
 	private int direction = 0; //0==straight, -1==left, 1==right
 	private int targetXp;
@@ -22,11 +22,16 @@ public class Ev3 {
 		
 	}
 	public boolean straightOneBlock() {
-		if ( direction == 0 && targetYp == yp)
+		if ( direction == 0 && yp == 3)
 			return false;
-		else if ((direction == -1 || direction == 1) && targetXp == xp)
+		else if ( direction == -1 && xp == 0)
+			return false;
+		else if ( direction == 1  && xp == 4)
+			return false;
+		
 		Motor.B.rotate(430, true);
 		Motor.C.rotate(430);
+		
 		if( direction == 0 ) {
 			yp++;
 		} else {
@@ -41,24 +46,24 @@ public class Ev3 {
 			return false;
 		Motor.B.rotate(degree * 2, true);
 		Motor.C.rotate(-degree * 2);
-		direction++;
+		direction += 1;
 		return true;
 	}
 
 	public boolean turnLeft() {
 		int degree = 90;
 		if (speed == 0 || direction==-1)
-			return false;		
+			return false;
 		Motor.B.rotate(-degree * 2, true);
 		Motor.C.rotate(degree * 2);
-		direction--;
+		direction -= 1;
 		return true;
 	}
 
-	public int getOneBlockDist() {
-		return 360*speed/100;
-	}
-	
+//	public int getOneBlockDist() {
+//		return 360*speed/100;
+//	}
+
 	public int getXp() {
 		return xp;
 	}

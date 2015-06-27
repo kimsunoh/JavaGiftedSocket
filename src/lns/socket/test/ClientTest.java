@@ -16,14 +16,16 @@ public class ClientTest {
 		slaveEv3.ev3SetUp(0, 4, 100, 3, 0);
 		
 		socket.connect();
+		
 		socket.emitMessage(slaveEv3.getXp()+","+slaveEv3.getYp());
  
 		socket.onMessage(new ClientMessageListener(){
 			public void onMessage(MessageSocketClient socket, String message){
 				//System.out.println("client received : " + message);
-				if(getMasterOrder(message))
+				if(getMasterOrder(message)) {
+					System.out.println("direc" + slaveEv3.getDirection() + "/ ");
 					socket.emitMessage(slaveEv3.getXp()+","+slaveEv3.getYp());
-				else
+				} else
 					socket.disconnect();
 			}
 		});
@@ -36,15 +38,18 @@ public class ClientTest {
 	}
 	
 	public static boolean getMasterOrder(String message){
-	
+		String[] array = message.split(" ");
+		if(array.length > 1)
+			return false;
+		
 		if (message == "turn") 
 			turnSlave();
 		else if (message == "run") {
 			goSlaveTargetSpot();
 			return true;
 		}
-		slaveEv3.straightOneBlock();
 		
+		slaveEv3.straightOneBlock();
 		return true;
 	}
 
@@ -58,7 +63,6 @@ public class ClientTest {
 					slaveEv3.turnLeft();
 			while( slaveEv3.getTargetYp() != slaveEv3.getYp() )
 				slaveEv3.straightOneBlock();
-
 		}
 		
 		if( slaveEv3.getTargetXp() < slaveEv3.getXp() ) {
@@ -74,4 +78,5 @@ public class ClientTest {
 		else
 			slaveEv3.turnLeft();
 	}
+	
 }
